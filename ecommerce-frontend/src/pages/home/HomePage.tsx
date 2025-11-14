@@ -5,7 +5,7 @@ import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
 import "./HomePage.css";
 
-type CartItemType = {
+export type CartItemType = {
   id: number;
   productId: string;
   quantity: number;

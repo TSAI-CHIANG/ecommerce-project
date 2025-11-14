@@ -1,15 +1,9 @@
 import { Link } from "react-router";
+import type { CartItemType } from "../pages/home/HomePage";
 import "./header.css";
 
 type HeaderProps = {
-  cart: {
-    id: number;
-    productId: string;
-    quantity: number;
-    // deliveryOptionId: number;
-    // createdAt: string;
-    // updatedAt: string;
-  }[];
+  cart: CartItemType[];
 };
 
 export function Header({ cart }: HeaderProps) {
