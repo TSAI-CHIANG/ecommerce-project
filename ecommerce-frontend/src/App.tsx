@@ -6,6 +6,8 @@ import { CheckoutPage } from "./pages/checkout/CheckoutPage";
 import { OrdersPage } from "./pages/orders/OrdersPage";
 import "./App.css";
 
+export type LoadCartFn = () => void | Promise<void>;
+
 function App() {
   const [cart, setCart] = useState([]);
 
