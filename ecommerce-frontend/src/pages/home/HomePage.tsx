@@ -1,10 +1,25 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import type { LoadCartFn } from "../../App";
 import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
 import "./HomePage.css";
 
-export function HomePage({ cart, loadCart }) {
+type CartItemType = {
+  id: number;
+  productId: string;
+  quantity: number;
+  deliveryOptionId: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type HomePageProps = {
+  cart: CartItemType[];
+  loadCart: LoadCartFn;
+};
+
+export function HomePage({ cart, loadCart }: HomePageProps) {
   const [products, setProducts] = useState([]);
 
   const getHomeData = async () => {
