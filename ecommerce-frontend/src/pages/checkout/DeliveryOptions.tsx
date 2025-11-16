@@ -1,8 +1,21 @@
 import dayjs from "dayjs";
 import axios from "axios";
 import { formatMoney } from "../../utils/money";
+import type { CartItemType } from "../home/HomePage";
+import type { LoadCartFn } from "../../App";
+import type { DeliveryOptionType } from "./OrderSummary";
 
-export function DeliveryOptions({ cartItem, deliveryOptions, loadCart }) {
+type DeliveryOptionsProps = {
+  cartItem: CartItemType;
+  deliveryOptions: DeliveryOptionType[];
+  loadCart: LoadCartFn;
+};
+
+export function DeliveryOptions({
+  cartItem,
+  deliveryOptions,
+  loadCart,
+}: DeliveryOptionsProps) {
   return (
     <div className="delivery-options">
       <div className="delivery-options-title">Choose a delivery option:</div>
@@ -17,7 +30,7 @@ export function DeliveryOptions({ cartItem, deliveryOptions, loadCart }) {
           await axios.put(`/api/cart-items/${cartItem.productId}`, {
             deliveryOptionId: deliveryOption.id,
           });
-          await loadCart();
+          await loadCart(); //每次選運送方法後都要執行這個updateDeliveryOption下的loadCart？？？會不會沒效率???
         };
 
         return (
@@ -27,10 +40,10 @@ export function DeliveryOptions({ cartItem, deliveryOptions, loadCart }) {
             onClick={updateDeliveryOption}
           >
             <input
+              className="delivery-option-input"
               type="radio"
               checked={deliveryOption.id === cartItem.deliveryOptionId}
               onChange={() => {}}
-              className="delivery-option-input"
               name={`delivery-option-${cartItem.productId}`}
             />
             <div>

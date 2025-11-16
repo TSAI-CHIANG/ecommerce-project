@@ -2,17 +2,38 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
 import { DeliveryOptions } from "./DeliveryOptions";
+import type { CartItemType } from "../home/HomePage";
+import type { LoadCartFn } from "../../App";
 
-export function OrderSummary({ cart, deliveryOptions, loadCart }) {
+export type DeliveryOptionType = {
+  id: string;
+  deliveryDays: number;
+  priceCents: number;
+  estimatedDeliveryTimeMs: number;
+};
+
+type OrderSummaryProps = {
+  cart: CartItemType[];
+  deliveryOptions: DeliveryOptionType[];
+  loadCart: LoadCartFn;
+};
+
+export function OrderSummary({
+  cart,
+  deliveryOptions,
+  loadCart,
+}: OrderSummaryProps) {
   return (
     <div className="order-summary">
-      {deliveryOptions.length > 0 &&
+      {deliveryOptions.length > 0 && //???
         cart.map((cartItem) => {
           const selectedDeliveryOption = deliveryOptions.find(
             (deliveryOption) => {
               return deliveryOption.id === cartItem.deliveryOptionId;
             }
           );
+
+          if (!selectedDeliveryOption) return null;
 
           const deleteCartItem = async () => {
             await axios.delete(`/api/cart-items/${cartItem.productId}`);
@@ -22,7 +43,7 @@ export function OrderSummary({ cart, deliveryOptions, loadCart }) {
           return (
             <div key={cartItem.productId} className="cart-item-container">
               <div className="delivery-date">
-                Delivery date:{" "}
+                Delivery date:
                 {dayjs(selectedDeliveryOption.estimatedDeliveryTimeMs).format(
                   "dddd, MMMM D"
                 )}
@@ -38,11 +59,10 @@ export function OrderSummary({ cart, deliveryOptions, loadCart }) {
                   </div>
                   <div className="product-quantity">
                     <span>
-                      Quantity:{" "}
-                      <span className="quantity-label">
-                        {cartItem.quantity}
-                      </span>
+                      Quantity:{cartItem.quantity}
+                      {/* <span className="quantity-label"> */}
                     </span>
+                    {/* </span> */}
                     <span className="update-quantity-link link-primary">
                       Update
                     </span>

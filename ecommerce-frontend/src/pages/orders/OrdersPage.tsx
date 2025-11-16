@@ -3,10 +3,31 @@ import dayjs from "dayjs";
 import { useState, useEffect, Fragment } from "react";
 import { Header } from "../../components/Header";
 import { formatMoney } from "../../utils/money";
+import type { CartItemType } from "../home/HomePage";
 import "./OrdersPage.css";
 
-export function OrdersPage({ cart }) {
-  const [orders, setOrders] = useState([]);
+type OrdersPageProps = {
+  cart: CartItemType[];
+};
+
+type Order = {
+  id: string;
+  orderTimeMs: number;
+  totalCostCents: number;
+  products: {
+    productID: string;
+    quantity: number;
+    estimatedDeliveryTimeMs: number;
+    product: {
+      id: string;
+      name: string;
+      image: string;
+    };
+  }[];
+};
+
+export function OrdersPage({ cart }: OrdersPageProps) {
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     axios.get("/api/orders?expand=products").then((response) => {

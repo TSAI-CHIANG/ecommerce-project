@@ -12,6 +12,12 @@ export type CartItemType = {
   deliveryOptionId: string;
   createdAt: string;
   updatedAt: string;
+  product: {
+    id: string;
+    priceCents: number;
+    image: string;
+    name: string;
+  };
 };
 
 type HomePageProps = {
