@@ -1,5 +1,5 @@
-import { Link } from "react-router";
-import type { CartItemType } from "../pages/home/HomePage";
+import { Link } from "react-router-dom";
+import type { CartItemType } from "../types";
 import "./header.css";
 
 type HeaderProps = {
@@ -7,11 +7,12 @@ type HeaderProps = {
 };
 
 export function Header({ cart }: HeaderProps) {
-  let totalQuantity = 0;
+  // let totalQuantity = 0;
+  // cart.forEach((cartItem) => {
+  //   totalQuantity += cartItem.quantity;
+  // });
 
-  cart.forEach((cartItem) => {
-    totalQuantity += cartItem.quantity;
-  });
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="header">

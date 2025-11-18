@@ -2,15 +2,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
 import { DeliveryOptions } from "./DeliveryOptions";
-import type { CartItemType } from "../home/HomePage";
-import type { LoadCartFn } from "../../App";
-
-export type DeliveryOptionType = {
-  id: string;
-  deliveryDays: number;
-  priceCents: number;
-  estimatedDeliveryTimeMs: number;
-};
+import type { CartItemType, LoadCartFn, DeliveryOptionType } from "../../types";
 
 type OrderSummaryProps = {
   cart: CartItemType[];
@@ -23,67 +15,81 @@ export function OrderSummary({
   deliveryOptions,
   loadCart,
 }: OrderSummaryProps) {
+  const hasDeliveryOptions = deliveryOptions.length > 0;
+
+  const handleDeleteCartItem = async (productId: string): Promise<void> => {
+    await axios.delete(`/api/cart-items/${productId}`);
+    await loadCart();
+  };
+
+  if (!hasDeliveryOptions) {
+    return (
+      <div className="order-summary">
+        {<div>No delivery options available.</div>}
+      </div>
+    );
+  }
+
   return (
     <div className="order-summary">
-      {deliveryOptions.length > 0 && //???
-        cart.map((cartItem) => {
-          const selectedDeliveryOption = deliveryOptions.find(
-            (deliveryOption) => {
-              return deliveryOption.id === cartItem.deliveryOptionId;
-            }
-          );
+      {cart.map((cartItem) => {
+        const selectedDeliveryOption = deliveryOptions.find(
+          (deliveryOption) => {
+            return deliveryOption.id === cartItem.deliveryOptionId;
+          }
+        );
 
-          if (!selectedDeliveryOption) return null;
+        if (!selectedDeliveryOption) return null;
 
-          const deleteCartItem = async () => {
-            await axios.delete(`/api/cart-items/${cartItem.productId}`);
-            await loadCart();
-          };
+        // const deleteCartItem = async (): Promise<void> => {
+        //   await axios.delete(`/api/cart-items/${cartItem.productId}`);
+        //   await loadCart();
+        // };
 
-          return (
-            <div key={cartItem.productId} className="cart-item-container">
-              <div className="delivery-date">
-                Delivery date:
-                {dayjs(selectedDeliveryOption.estimatedDeliveryTimeMs).format(
-                  "dddd, MMMM D"
-                )}
-              </div>
-
-              <div className="cart-item-details-grid">
-                <img className="product-image" src={cartItem.product.image} />
-
-                <div className="cart-item-details">
-                  <div className="product-name">{cartItem.product.name}</div>
-                  <div className="product-price">
-                    {formatMoney(cartItem.product.priceCents)}
-                  </div>
-                  <div className="product-quantity">
-                    <span>
-                      Quantity:{cartItem.quantity}
-                      {/* <span className="quantity-label"> */}
-                    </span>
-                    {/* </span> */}
-                    <span className="update-quantity-link link-primary">
-                      Update
-                    </span>
-                    <span
-                      className="delete-quantity-link link-primary"
-                      onClick={deleteCartItem}
-                    >
-                      Delete
-                    </span>
-                  </div>
-                </div>
-
-                <DeliveryOptions
-                  cartItem={cartItem}
-                  deliveryOptions={deliveryOptions}
-                  loadCart={loadCart}
-                />
-              </div>
+        return (
+          <div key={cartItem.productId} className="cart-item-container">
+            <div className="delivery-date">
+              Delivery date:
+              {dayjs(selectedDeliveryOption.estimatedDeliveryTimeMs).format(
+                "dddd, MMMM D"
+              )}
             </div>
-          );
-        })}
+
+            <div className="cart-item-details-grid">
+              <img className="product-image" src={cartItem.product.image} />
+
+              <div className="cart-item-details">
+                <div className="product-name">{cartItem.product.name}</div>
+                <div className="product-price">
+                  {formatMoney(cartItem.product.priceCents)}
+                </div>
+                <div className="product-quantity">
+                  <span>
+                    Quantity:{cartItem.quantity}
+                    {/* <span className="quantity-label"> */}
+                  </span>
+                  {/* </span> */}
+                  <span className="update-quantity-link link-primary">
+                    Update
+                  </span>
+                  <span
+                    className="delete-quantity-link link-primary"
+                    onClick={() => handleDeleteCartItem(cartItem.productId)}
+                  >
+                    Delete
+                  </span>
+                </div>
+              </div>
+
+              <DeliveryOptions
+                cartItem={cartItem}
+                deliveryOptions={deliveryOptions}
+                loadCart={loadCart}
+              />
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

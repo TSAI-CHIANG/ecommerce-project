@@ -1,16 +1,5 @@
 import { Product } from "./Product";
-import { type LoadCartFn } from "../../App";
-
-export type ProductType = {
-  id: string;
-  name: string;
-  priceCents: number;
-  image: string;
-  rating: {
-    stars: number;
-    count: number;
-  };
-};
+import type { LoadCartFn, ProductType } from "../../types";
 
 type ProductsGridProps = {
   products: ProductType[];

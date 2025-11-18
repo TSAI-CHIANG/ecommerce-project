@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useState, useEffect, Fragment } from "react";
 import { Header } from "../../components/Header";
 import { formatMoney } from "../../utils/money";
-import type { CartItemType } from "../home/HomePage";
+import type { CartItemType } from "../../types";
 import "./OrdersPage.css";
 
 type OrdersPageProps = {
@@ -15,7 +15,7 @@ type Order = {
   orderTimeMs: number;
   totalCostCents: number;
   products: {
-    productID: string;
+    productId: string;
     quantity: number;
     estimatedDeliveryTimeMs: number;
     product: {
@@ -30,9 +30,13 @@ export function OrdersPage({ cart }: OrdersPageProps) {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    axios.get("/api/orders?expand=products").then((response) => {
-      setOrders(response.data);
-    });
+    const fetchOrders = async () => {
+      const orderResponse = await axios.get<Order[]>(
+        "/api/orders?expand=products"
+      );
+      setOrders(orderResponse.data);
+    };
+    void fetchOrders();
   }, []);
 
   return (

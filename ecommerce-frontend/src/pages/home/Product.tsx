@@ -1,26 +1,33 @@
 import axios from "axios";
 import { useState, type ChangeEvent } from "react";
 import { formatMoney } from "../../utils/money";
-import { type LoadCartFn } from "../../App";
-import { type ProductType } from "./ProductsGrid";
+import type { LoadCartFn, ProductType } from "../../types";
 
 type ProductProps = {
   product: ProductType;
   loadCart: LoadCartFn;
 };
 
+const QUANTITY_OPTIONS = Array.from({ length: 10 }, (_, i) => i + 1);
+
 export function Product({ product, loadCart }: ProductProps) {
   const [quantity, setQuantity] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const addToCart = async () => {
-    await axios.post("/api/cart-items", {
-      productId: product.id,
-      quantity,
-    });
-    await loadCart();
+  const addToCart = async (): Promise<void> => {
+    try {
+      setIsSubmitting(true);
+      await axios.post("/api/cart-items", {
+        productId: product.id,
+        quantity,
+      });
+      await loadCart();
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const selectQuantity = (event: ChangeEvent<HTMLSelectElement>) => {
+  const selectQuantity = (event: ChangeEvent<HTMLSelectElement>): void => {
     const quantitySelected = Number(event.target.value);
     setQuantity(quantitySelected);
   };
@@ -52,7 +59,12 @@ export function Product({ product, loadCart }: ProductProps) {
 
       <div className="product-quantity-container">
         <select value={quantity} onChange={selectQuantity}>
-          <option value="1">1</option>
+          {QUANTITY_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+          {/* <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
@@ -61,7 +73,7 @@ export function Product({ product, loadCart }: ProductProps) {
           <option value="7">7</option>
           <option value="8">8</option>
           <option value="9">9</option>
-          <option value="10">10</option>
+          <option value="10">10</option> */}
         </select>
       </div>
 
@@ -76,8 +88,9 @@ export function Product({ product, loadCart }: ProductProps) {
         className="add-to-cart-button button-primary"
         data-testid="add-to-cart-button"
         onClick={addToCart}
+        disabled={isSubmitting}
       >
-        Add to Cart
+        {isSubmitting ? "Submitting" : "Add to Cart"}
       </button>
     </div>
   );

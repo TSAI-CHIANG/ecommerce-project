@@ -1,24 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import type { LoadCartFn } from "../../App";
+import type { LoadCartFn, CartItemType, ProductType } from "../../types";
 import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
 import "./HomePage.css";
-
-export type CartItemType = {
-  id: number;
-  productId: string;
-  quantity: number;
-  deliveryOptionId: string;
-  createdAt: string;
-  updatedAt: string;
-  product: {
-    id: string;
-    priceCents: number;
-    image: string;
-    name: string;
-  };
-};
 
 type HomePageProps = {
   cart: CartItemType[];
@@ -26,16 +11,44 @@ type HomePageProps = {
 };
 
 export function HomePage({ cart, loadCart }: HomePageProps) {
-  const [products, setProducts] = useState([]);
-
-  const getHomeData = async () => {
-    const response = await axios.get("/api/products");
-    setProducts(response.data);
-  };
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getHomeData();
+    const getHomeData = async (): Promise<void> => {
+      try {
+        setLoading(true);
+        const response = await axios.get<ProductType[]>("/api/products");
+        setProducts(response.data);
+      } catch (error) {
+        setError("Failed to load products");
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void getHomeData();
   }, []);
+
+  if (loading && products.length === 0) {
+    return (
+      <>
+        <Header cart={cart} />
+        <div className="home-page">Loading...</div>
+      </>
+    );
+  }
+
+  if (error && products.length === 0) {
+    return (
+      <>
+        <Header cart={cart} />
+        <div className="home-page">{error}</div>
+      </>
+    );
+  }
 
   return (
     <>

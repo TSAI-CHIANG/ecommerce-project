@@ -3,8 +3,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router"; // 或 "react-router-dom"（視專案設定）
 import { OrderSummary } from "./OrderSummary";
 import { PaymentSummary } from "./PaymentSummary";
-import type { CartItemType } from "../home/HomePage";
-import type { LoadCartFn } from "../../App";
+import type {
+  CartItemType,
+  LoadCartFn,
+  DeliveryOptionType,
+  PaymentSummaryType,
+} from "../../types";
 import "./checkout-header.css";
 import "./CheckoutPage.css";
 
@@ -14,21 +18,32 @@ type CheckoutPageProps = {
 };
 
 export function CheckoutPage({ cart, loadCart }: CheckoutPageProps) {
-  const [deliveryOptions, setDeliveryOptions] = useState([]);
-  const [paymentSummary, setPaymentSummary] = useState(null);
+  const [deliveryOptions, setDeliveryOptions] = useState<DeliveryOptionType[]>(
+    []
+  );
+  const [paymentSummary, setPaymentSummary] = useState<PaymentSummaryType>({
+    totalItems: 0,
+    productCostCents: 0,
+    shippingCostCents: 0,
+    totalCostBeforeTaxCents: 0,
+    taxCents: 0,
+    totalCostCents: 0,
+  });
 
-  const fetchCheckoutData = async () => {
-    let response = await axios.get(
+  const fetchCheckoutData = async (): Promise<void> => {
+    const deliveryResponse = await axios.get<DeliveryOptionType[]>(
       "/api/delivery-options?expand=estimatedDeliveryTime"
     );
-    setDeliveryOptions(response.data);
+    setDeliveryOptions(deliveryResponse.data);
 
-    response = await axios.get("/api/payment-summary");
-    setPaymentSummary(response.data);
+    const paymentResponse = await axios.get<PaymentSummaryType>(
+      "/api/payment-summary"
+    );
+    setPaymentSummary(paymentResponse.data);
   };
 
   useEffect(() => {
-    fetchCheckoutData();
+    void fetchCheckoutData();
   }, [cart]);
 
   return (

@@ -5,14 +5,15 @@ import { HomePage } from "./pages/home/HomePage";
 import { CheckoutPage } from "./pages/checkout/CheckoutPage";
 import { OrdersPage } from "./pages/orders/OrdersPage";
 import "./App.css";
-
-export type LoadCartFn = () => void | Promise<void>;
+import { type CartItemType, type LoadCartFn } from "./types";
 
 function App() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState<CartItemType[]>([]);
 
-  const loadCart = async () => {
-    const response = await axios.get("/api/cart-items?expand=product");
+  const loadCart: LoadCartFn = async () => {
+    const response = await axios.get<CartItemType[]>(
+      "/api/cart-items?expand=product"
+    );
     setCart(response.data);
   };
 
