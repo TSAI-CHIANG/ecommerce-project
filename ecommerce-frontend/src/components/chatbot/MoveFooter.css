@@ -1,0 +1,14 @@
+.move-textbox-footer{
+    /* margin-bottom: 20px; */
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    
+    color: seagreen;           /* 文字顏色 */
+    font-size: 15px;
+    cursor: pointer;           /* 滑鼠變成手指形狀 */
+    text-decoration: underline; /* 底線效果 */
+    text-underline-offset: 4px; /* 底線與文字距離更自然 */
+    /* transition: color 0.2s ease; */
+
+}

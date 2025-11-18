@@ -7,6 +7,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "allowJs": true, //need delete this
+    "types": ["react", "react-dom"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",

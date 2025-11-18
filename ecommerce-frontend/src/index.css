@@ -5,6 +5,12 @@ body {
      on all sides. This removes the default margins. */
   margin: 0;
 }
+ 
+/* body {  from chatbot project index.css
+  font-family: Arial;
+  margin-top: 0px;
+  margin-bottom: 0px;
+} */
 
 /* Remove the default margins of <p> elements. */
 p {
