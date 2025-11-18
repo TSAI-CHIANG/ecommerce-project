@@ -28,7 +28,9 @@ export function ChatbotWidget() {
 
   const [isChatWindowOpen, setIsChatWindowOpen] = useState<boolean>(true);
 
-  // 🔥 如果視窗關閉，顯示一個開啟按鈕
+  // const botPersonality = "introvert";
+
+  //如果視窗關閉，顯示一個開啟按鈕
   if (!isChatWindowOpen) {
     return (
       <button
@@ -57,6 +59,7 @@ export function ChatbotWidget() {
             <ChatInput
               chatMessages={chatMessages}
               setChatMessages={setChatMessages}
+              // botPersonality={botPersonality}
             />
             <ChatMessages chatMessages={chatMessages} />
           </>

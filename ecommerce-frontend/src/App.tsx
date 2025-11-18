@@ -10,7 +10,6 @@ import { type CartItemType, type LoadCartFn } from "./types";
 
 function App() {
   const [cart, setCart] = useState<CartItemType[]>([]);
-
   const loadCart: LoadCartFn = async () => {
     const response = await axios.get<CartItemType[]>(
       "/api/cart-items?expand=product"
