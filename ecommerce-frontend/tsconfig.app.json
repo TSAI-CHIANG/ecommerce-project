@@ -7,7 +7,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "allowJs": true, //need delete this
-    "types": ["react", "react-dom"],
+    "types": ["react", "react-dom", "vitest/globals", "@testing-library/jest-dom"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",

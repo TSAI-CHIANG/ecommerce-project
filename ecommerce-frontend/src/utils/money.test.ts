@@ -9,6 +9,5 @@ describe('formatMoney', () => {
     it ('display two decimals', ()=> {
         expect (formatMoney (2000)).toBe ('$20.00');
         expect (formatMoney (900)).toBe ('$9.00');
-
     })
 });
