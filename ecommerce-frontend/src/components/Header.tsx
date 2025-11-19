@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { CartItemType } from "../types";
+import { ThemeSwitch } from "../components/ThemeSwitch";
 import "./header.css";
 
 type HeaderProps = {
@@ -21,6 +22,7 @@ export function Header({ cart }: HeaderProps) {
           <img className="logo" src="images/logo.png" />
           <img className="mobile-logo" src="images/mobile-logo.png" />
         </Link>
+        <ThemeSwitch />
       </div>
 
       <div className="middle-section">

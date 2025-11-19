@@ -15,16 +15,17 @@
 
 /* Title Bar */
 .chatbot-widget-title {
+  color: black;
   width: 100%;
   font-size: 20px;
   font-weight: 600;
-  background: #2f8a307d;
+  background: rgb(241, 178, 30);
   border-bottom: 1px solid #ddd;
   border-radius: 8px 8px 0 0;
   /* padding: 8px 14px; */
-  border-color: #1c6e1c;
+  border-color: #86b510;
 
-  /* 🔥 flex 版型：左邊文字 / 右邊按鈕 */
+  /* flex 版型：左邊文字 / 右邊按鈕 */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -34,7 +35,7 @@
   z-index: 10;
 }
 
-/* 🔥 讓文字佔左邊空間，避免把按鈕擠掉 */
+/* 讓文字佔左邊空間，避免把按鈕擠掉 */
 .chatbot-widget-title-text {
   flex: 1;
   white-space: nowrap;
@@ -47,6 +48,7 @@
   padding: 20px 24px 24px 24px;
   overflow-y: auto;
   max-height: calc(520px - 60px);
+  color: black;
 }
 
 /* Title right-side close button */

@@ -1,5 +1,5 @@
 .header {
-  background-color: rgb(8, 79, 45);
+  background-color: rgb(241, 178, 30);
   color: white;
   padding-left: 15px;
   padding-right: 15px;
@@ -16,7 +16,9 @@
 }
 
 .header .left-section {
-  width: 208px;
+  width: 240px;
+  display: flex;
+  align-items: center;
 }
 
 @media (max-width: 800px) {
@@ -41,10 +43,12 @@
 .header .logo {
   height: 26px;
   margin-top: 1px;
+  margin-right: 24px;
 }
 
 .header .mobile-logo {
   display: none;
+  margin-right: 24px;
 }
 
 @media (max-width: 675px) {
@@ -65,6 +69,8 @@
   margin-left: 10px;
   margin-right: 10px;
   display: flex;
+  align-items: center;
+  
 }
 
 .header .search-bar {

@@ -1,0 +1,19 @@
+.theme-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;      /* ⬅ 避免在大螢幕時自動換行 */
+}
+
+.theme-switch-label {
+  white-space: nowrap;       /* ⬅ 避免「Light Mode」變兩行 */
+}
+
+@media (max-width: 500px) {
+  .theme-switch {
+    white-space: normal;     /* 小螢幕允許換行 */
+  }
+  .theme-switch-label {
+    white-space: normal;
+  }
+}
