@@ -42,7 +42,7 @@ describe("Product Component", () => {
 
     expect(screen.getByTestId("product-rating-stars-image")).toHaveAttribute(
       "src",
-      "images/ratings/rating-45.png"
+      "/images/ratings/rating-45.png"
     );
 
     expect(screen.getByText("87")).toBeInTheDocument();
