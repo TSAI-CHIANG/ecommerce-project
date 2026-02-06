@@ -62,4 +62,18 @@ describe("Product Component", () => {
 
     expect(loadCart).toHaveBeenCalled();
   });
+
+  it("should show error message when adding to cart fails", async () => {
+    // 模擬 API 失敗
+    vi.mocked(axios.post).mockRejectedValueOnce(new Error("Network Error"));
+
+    render(<Product product={product} loadCart={loadCart} />);
+
+    const user = userEvent.setup();
+    const addToCartButton = screen.getByTestId("add-to-cart-button");
+    await user.click(addToCartButton);
+
+    // 應該顯示錯誤訊息
+    expect(screen.getByText("加入購物車失敗")).toBeInTheDocument();
+  });
 });

@@ -96,7 +96,10 @@
 }
 
 .home-page .product-name {
-  height: 40px;
+  min-height: 40px;
+  /* 改用 min-height，讓長名稱可以展開 */
+  line-height: 1.4;
+  /* 增加行高，讓多行文字更易讀 */
   margin-bottom: 5px;
 }
 
@@ -142,7 +145,15 @@
      be invisible. Use JavaScript to change the
      opacity and make it visible. */
   opacity: 0;
+  transition: opacity 0.3s ease;
+  /* 淡入淡出動畫 */
 }
+
+/* 當加上 visible class 時顯示 */
+.home-page .added-to-cart.visible {
+  opacity: 1;
+}
+
 
 .home-page .added-to-cart img {
   height: 19px;
