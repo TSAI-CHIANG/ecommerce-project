@@ -19,8 +19,9 @@ export function HomePage({ cart, loadCart }: HomePageProps) {
     const getHomeData = async (): Promise<void> => {
       try {
         setLoading(true);
-        const response = await axios.get<ProductType[]>("/api/products");
-        setProducts(response.data);
+        const { data } = await axios.get<ProductType[]>("/api/products");
+        //<ProductType[]>: 指 response.data 的型別
+        setProducts(data);
       } catch (error) {
         setError("Failed to load products");
         console.error("Error fetching products:", error);
@@ -29,7 +30,7 @@ export function HomePage({ cart, loadCart }: HomePageProps) {
       }
     };
 
-    void getHomeData();
+    getHomeData();
   }, []);
 
   if (loading && products.length === 0) {
