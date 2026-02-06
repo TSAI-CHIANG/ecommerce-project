@@ -1,4 +1,5 @@
 export type LoadCartFn = () => void | Promise<void>;
+// 這個函數不需要任何參數，它可以是同步函數（回傳 void），也可以是非同步函數（回傳 Promise））
 
 export type CartItemType = {
   id: number;
