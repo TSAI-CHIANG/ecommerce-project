@@ -35,19 +35,19 @@ export function DeliveryOptions({
           <div
             key={deliveryOption.id}
             className="delivery-option"
-            onClick={updateDeliveryOption}
+            onClick={updateDeliveryOption} //不需要傳參數時，直接傳函式名稱，需要傳參數時，就必須用 arrow function 包裝：onClick={() => updateDeliveryOption(cartItem.productId)}
           >
             <input
               className="delivery-option-input"
               type="radio"
               checked={deliveryOption.id === cartItem.deliveryOptionId}
-              onChange={() => {}}
-              name={`delivery-option-${cartItem.productId}`}
+              onChange={() => {}} //有 checked 就必須有 onChange，但真正的點擊邏輯已經放在父層 div 的 onClick={updateDeliveryOption}，所以這個 onChange 只是為了讓 React 不報錯而存在的空殼。
+              name={`delivery-option-${cartItem.productId}`} //同一個 name 群組裡，只能選一個。
             />
             <div>
               <div className="delivery-option-date">
                 {dayjs(deliveryOption.estimatedDeliveryTimeMs).format(
-                  "dddd, MMMM D"
+                  "dddd, MMMM DD, YYYY"
                 )}
               </div>
               <div className="delivery-option-price">{priceString}</div>
