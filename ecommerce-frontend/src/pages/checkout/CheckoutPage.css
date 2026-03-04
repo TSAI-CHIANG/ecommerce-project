@@ -116,7 +116,16 @@
 }
 
 .checkout-page .product-quantity .link-primary {
-  margin-left: 3px;
+  margin-left: 5px;
+  background: rgb(187, 219, 174);
+  border: none;
+  border-radius: 2px;
+  padding: 4px;
+  /* font: inherit; */
+}
+
+.checkout-page .product-quantity .link-primary:hover {
+  background: rgb(87, 156, 78);
 }
 
 @media (max-width: 1000px) {

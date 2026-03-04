@@ -69,15 +69,15 @@ export function OrderSummary({
                     {/* <span className="quantity-label"> */}
                   </span>
                   {/* </span> */}
-                  <span className="update-quantity-link link-primary">
+                  <button className="update-quantity-link link-primary">
                     Update
-                  </span>
-                  <span
+                  </button>
+                  <button
                     className="delete-quantity-link link-primary"
                     onClick={() => handleDeleteCartItem(cartItem.productId)}
                   >
                     Delete
-                  </span>
+                  </button>
                 </div>
               </div>
 
