@@ -8,11 +8,11 @@ type CartStore = {
 };
 
 export const useCartStore = create<CartStore>((set) => ({
-    cart: [],
+    cart: [], // 一開始購物車是空的
     loadCart: async () => {
         const { data } = await axios.get<CartItemType[]>(
             "/api/cart-items?expand=product"
         );
-        set({ cart: data });
+        set({ cart: data });  // ← 用 set 把資料存進 store
     },
 }));

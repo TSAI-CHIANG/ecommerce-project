@@ -6,7 +6,10 @@ import "./Header.css";
 export function Header() {
   const cart = useCartStore((s) => s.cart);
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-
+  // let totalQuantity = 0;
+  // for (const item of cart) {
+  //   totalQuantity += item.quantity;
+  // }
   return (
     <div className="header">
       <div className="left-section">
