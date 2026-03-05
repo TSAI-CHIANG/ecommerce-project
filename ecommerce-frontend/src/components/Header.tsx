@@ -1,25 +1,17 @@
 import { Link } from "react-router-dom";
-import type { CartItemType } from "../types";
+import { useCartStore } from "../store/useCartStore";
 import { ThemeSwitch } from "./ThemeSwitch";
 import "./Header.css";
 
-type HeaderProps = {
-  cart: CartItemType[];
-};
-
-export function Header({ cart }: HeaderProps) {
-  // let totalQuantity = 0;
-  // cart.forEach((cartItem) => {
-  //   totalQuantity += cartItem.quantity;
-  // });
-
+export function Header() {
+  const cart = useCartStore((s) => s.cart);
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="header">
       <div className="left-section">
         <Link to="/" className="header-link">
-          <img className="logo" src="/images/logo.png" /> 
+          <img className="logo" src="/images/logo.png" />
           <img className="mobile-logo" src="/images/mobile-logo.png" />
           {/* 根據proxy設定(vite.config.ts)，這裡的/images會自動去後端找 */}
         </Link>

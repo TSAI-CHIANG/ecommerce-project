@@ -3,12 +3,7 @@ import dayjs from "dayjs";
 import { useState, useEffect, Fragment } from "react";
 import { Header } from "../../components/Header";
 import { formatMoney } from "../../utils/money";
-import type { CartItemType } from "../../types";
 import "./OrdersPage.css";
-
-type OrdersPageProps = {
-  cart: CartItemType[];
-};
 
 type Order = {
   id: string;
@@ -26,7 +21,7 @@ type Order = {
   }[];
 };
 
-export function OrdersPage({ cart }: OrdersPageProps) {
+export function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
@@ -43,7 +38,7 @@ export function OrdersPage({ cart }: OrdersPageProps) {
     <>
       <title>Orders</title>
 
-      <Header cart={cart} />
+      <Header />
 
       <div className="orders-page">
         <div className="page-title">Your Orders</div>

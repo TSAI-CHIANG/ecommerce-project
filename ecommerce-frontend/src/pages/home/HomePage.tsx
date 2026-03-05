@@ -1,16 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import type { LoadCartFn, CartItemType, ProductType } from "../../types";
+import type { ProductType } from "../../types";
 import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
+import { useCartStore } from "../../store/useCartStore";
 import "./HomePage.css";
 
-type HomePageProps = {
-  cart: CartItemType[];
-  loadCart: LoadCartFn;
-};
-
-export function HomePage({ cart, loadCart }: HomePageProps) {
+export function HomePage() {
+  const loadCart = useCartStore((s) => s.loadCart);
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +17,7 @@ export function HomePage({ cart, loadCart }: HomePageProps) {
     document.title = "Ecommerce Project";
   }, []);
 
-  useEffect(() => { 
+  useEffect(() => {
     // 以下這裡的程式碼在「畫面渲染完成後」才執行！
     const getHomeData = async (): Promise<void> => {
       try {
@@ -37,14 +34,13 @@ export function HomePage({ cart, loadCart }: HomePageProps) {
     };
 
     getHomeData();
-    //因為沒有寫 “await getHomeData()，useEffect 不會等待它完成。useEffect 的 callback 在這行之後就「結束」了。
+    //因為沒有寫 "await getHomeData()，useEffect 不會等待它完成。useEffect 的 callback 在這行之後就「結束」了。
   }, []);
 
   if (loading && products.length === 0) {
     return (
       <>
-        {/* <title>Ecommerce Project</title> */}
-        <Header cart={cart} />
+        <Header />
         <div className="home-page">Loading...</div>
       </>
     );
@@ -53,7 +49,7 @@ export function HomePage({ cart, loadCart }: HomePageProps) {
   if (error && products.length === 0) {
     return (
       <>
-        <Header cart={cart} />
+        <Header />
         <div className="home-page">{error}</div>
       </>
     );
@@ -61,7 +57,7 @@ export function HomePage({ cart, loadCart }: HomePageProps) {
 
   return (
     <>
-      <Header cart={cart} />
+      <Header />
 
       <div className="home-page">
         <ProductsGrid products={products} loadCart={loadCart} />
