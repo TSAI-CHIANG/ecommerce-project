@@ -1,9 +1,9 @@
-// src/features/chatbot/ChatbotWidget.tsx
+// src/components/chatbot/ChatbotWidget.tsx
 import { useState } from "react";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import MoveFooter from "./MoveFooter";
-import "./ChatbotWidget.css"; // 把原本 App.css 搬過來或改名用這個
+import "./ChatbotWidget.css";
 
 export type ChatMessageType = {
   id: string;
