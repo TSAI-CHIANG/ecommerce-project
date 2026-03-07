@@ -1,6 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import { useState, useEffect, Fragment } from "react";
+import { Link } from "react-router-dom";
 import { Header } from "../../components/Header";
 import { formatMoney } from "../../utils/money";
 import "./OrdersPage.css";
@@ -31,7 +32,7 @@ export function OrdersPage() {
       );
       setOrders(orderResponse.data);
     };
-    void fetchOrders();
+    void fetchOrders(); //useEffect 的 callback 不能回傳 Promise。
   }, []);
 
   return (
@@ -51,7 +52,7 @@ export function OrdersPage() {
                   <div className="order-header-left-section">
                     <div className="order-date">
                       <div className="order-header-label">Order Placed:</div>
-                      <div>{dayjs(order.orderTimeMs).format("MMMM D")}</div>
+                      <div>{dayjs(order.orderTimeMs).format("MMMM DD, YYYY")}</div>
                     </div>
                     <div className="order-total">
                       <div className="order-header-label">Total:</div>
@@ -80,7 +81,7 @@ export function OrdersPage() {
                           <div className="product-delivery-date">
                             Arriving on:{" "}
                             {dayjs(orderProduct.estimatedDeliveryTimeMs).format(
-                              "MMMM D"
+                              "MMMM DD, YYYY"
                             )}
                           </div>
                           <div className="product-quantity">
@@ -98,11 +99,9 @@ export function OrdersPage() {
                         </div>
 
                         <div className="product-actions">
-                          <a href="/tracking">
-                            <button className="track-package-button button-secondary">
-                              Track package
-                            </button>
-                          </a>
+                          <Link to='/tracking' className="track-package-button button-secondary">
+                            Track Package
+                          </Link>
                         </div>
                       </Fragment>
                     );
