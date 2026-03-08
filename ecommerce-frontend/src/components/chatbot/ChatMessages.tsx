@@ -1,16 +1,11 @@
 import {useEffect, useRef} from 'react'
 import { ChatMessage } from './ChatMessage';
+import { useChatStore } from "../../store/useChatStore";
 import "./ChatMessages.css"
-import type { ChatMessageType } from "./ChatbotWidget";
 
-type ChatMessagesProps = {
-    chatMessages: ChatMessageType[];
-}
-
-function ChatMessages({chatMessages}: ChatMessagesProps) {
+function ChatMessages() {
     const chatMessagesRef = useRef<HTMLDivElement>(null); 
-    //建立一個「指向 DOM 元素的指針」，<HTMLDivElement> 是 TypeScript 型別，告訴 TS 這個 ref 指向的是 <div>
-    // useRef 回傳一個物件: { current: null } 初始值
+    const chatMessages = useChatStore((s) => s.chatMessages);
 
     // 自動捲到最新訊息: 陣列 chatMessages 每當改變就執行 useEffect
     useEffect( () => {

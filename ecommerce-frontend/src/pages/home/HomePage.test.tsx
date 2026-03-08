@@ -6,16 +6,11 @@ import { HomePage } from "./HomePage";
 import { ThemeProvider } from "../../context/ThemeProvider"; // 路徑依你的專案調整
 import type { ProductType } from "../../types";
 
-vi.mock("axios");
-
 describe("HomePage Component", () => {
-  let loadCart: () => Promise<void>;
   let mockProducts: ProductType[];
 
   beforeEach(() => {
     vi.resetAllMocks();
-
-    loadCart = vi.fn();
 
     mockProducts = [
       {
@@ -50,7 +45,7 @@ describe("HomePage Component", () => {
     render(
       <MemoryRouter>
         <ThemeProvider>
-          <HomePage cart={[]} loadCart={loadCart} />
+          <HomePage />
         </ThemeProvider>
       </MemoryRouter>
     );

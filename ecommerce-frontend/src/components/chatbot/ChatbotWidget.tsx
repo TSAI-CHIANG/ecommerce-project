@@ -1,8 +1,8 @@
 // src/components/chatbot/ChatbotWidget.tsx
-import { useState } from "react";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
 import MoveFooter from "./MoveFooter";
+import { useChatStore } from "../../store/useChatStore";
 import "./ChatbotWidget.css";
 
 export type ChatMessageType = {
@@ -12,30 +12,16 @@ export type ChatMessageType = {
 };
 
 export function ChatbotWidget() {
-  const [chatMessages, setChatMessages] = useState<ChatMessageType[]>([
-    {
-      id: "id1",
-      text: "Hello",
-      sender: "user",
-    },
-    {
-      id: "id2",
-      text: "Hello! How can I help you?",
-      sender: "robot",
-    },
-  ]);
-  const [isTextboxTop, setIsTextboxTop] = useState<boolean>(true);
-
-  const [isChatWindowOpen, setIsChatWindowOpen] = useState<boolean>(true);
-
-  // const botPersonality = "introvert";
+  const isChatWindowOpen = useChatStore((s) => s.isChatWindowOpen);
+  const toggleChatWindow = useChatStore((s) => s.toggleChatWindow);
+  const isTextboxTop = useChatStore((s) => s.isTextboxTop);
 
   //如果視窗關閉，顯示一個開啟按鈕
   if (!isChatWindowOpen) {
     return (
       <button
         className="chatbot-open-button"
-        onClick={() => setIsChatWindowOpen(true)}
+        onClick={toggleChatWindow}
       >
         💬
       </button>
@@ -48,7 +34,7 @@ export function ChatbotWidget() {
         <span className="chatbot-widget-title-text">🤖 Chat Assistant</span>
         <button
           className="chatbot-close-button"
-          onClick={() => setIsChatWindowOpen(false)}
+          onClick={toggleChatWindow}
         >
           ✕
         </button>
@@ -56,28 +42,19 @@ export function ChatbotWidget() {
       <div className="chatbot-widget-content">
         {isTextboxTop ? (
           <>
-            <ChatInput
-              chatMessages={chatMessages}
-              setChatMessages={setChatMessages}
-              // botPersonality={botPersonality}
-            />
-            <ChatMessages chatMessages={chatMessages} />
+            <ChatInput />
+            <ChatMessages />
           </>
         ) : (
           <>
-            <ChatMessages chatMessages={chatMessages} />
-            <ChatInput
-              chatMessages={chatMessages}
-              setChatMessages={setChatMessages}
-            />
+            <ChatMessages />
+            <ChatInput />
           </>
         )}
 
-        <MoveFooter
-          isTextboxTop={isTextboxTop}
-          setIsTextboxTop={setIsTextboxTop}
-        />
+        <MoveFooter />
       </div>
     </div>
   );
 }
+

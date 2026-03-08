@@ -1,19 +1,12 @@
+import { useChatStore } from "../../store/useChatStore";
 import "./MoveFooter.css";
-import type { Dispatch, SetStateAction } from "react";
 
-type MoveFooterProps = {
-  isTextboxTop: boolean;
-  setIsTextboxTop: Dispatch<SetStateAction<boolean>>;
-}
-
-function MoveFooter({ isTextboxTop, setIsTextboxTop }: MoveFooterProps) {
-
-  function handleClickFooter() {
-    setIsTextboxTop((prev: boolean) => !prev);
-  }
+function MoveFooter() {
+  const isTextboxTop = useChatStore((s) => s.isTextboxTop);
+  const toggleTextboxPosition = useChatStore((s) => s.toggleTextboxPosition);
 
   return (
-    <div className="move-textbox-footer" onClick={() => handleClickFooter()}>
+    <div className="move-textbox-footer" onClick={toggleTextboxPosition}>
       {isTextboxTop ? "Move textbox to bottom" : "Move textbox to top"}
     </div>
   );
