@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { useCartStore } from "../store/useCartStore";
+import { useAuthStore } from "../store/useAuthStore";
 import { ThemeSwitch } from "./ThemeSwitch";
 import "./Header.css";
 
 export function Header() {
   const cart = useCartStore((s) => s.cart);
+  const { isAuthenticated, logout, user } = useAuthStore();
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
   // let totalQuantity = 0;
   // for (const item of cart) {
@@ -30,9 +32,19 @@ export function Header() {
       </div>
 
       <div className="right-section">
-        <Link className="orders-link header-link" to="/orders">
-          <span className="orders-text">Orders</span>
-        </Link>
+        {isAuthenticated ? (
+          <div className="header-user-info">
+             <span className="welcome-text">Hi, {user?.name}</span>
+             <button onClick={logout} className="logout-button header-link">Logout</button>
+             <Link className="orders-link header-link" to="/orders">
+               <span className="orders-text">Orders</span>
+             </Link>
+          </div>
+        ) : (
+          <Link className="login-link header-link" to="/login">
+            <span className="login-text">Sign In</span>
+          </Link>
+        )}
 
         <Link className="cart-link header-link" to="/checkout">
           <img className="cart-icon" src="/images/icons/cart-icon.png" />

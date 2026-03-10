@@ -43,3 +43,9 @@ export type PaymentSummaryType = {
   taxCents: number;
   totalCostCents: number;
 };
+
+export type UserType = {
+  id: string;
+  name: string;
+  email: string;
+};
