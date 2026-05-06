@@ -171,6 +171,6 @@
   padding: 12px 20px;
   margin: 0;
   font-size: 14px;
-  color: var(--secondary-text-color, #666);
+  color: var(--text-color, #666);
   border-bottom: 1px solid var(--border-color);
 }
