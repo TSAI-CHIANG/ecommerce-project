@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useAuthStore } from "../store/useAuthStore";
@@ -14,13 +14,20 @@ export function Header() {
   //   totalQuantity += item.quantity;
   // }
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); //searchQuery：控制搜尋框顯示的文字（使用者輸入的搜尋關鍵字）
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams(); // 讀取目前 URL 參數，搜尋時才能保留 sort 參數
 
   const handleSearch = () => {
-    const trimmed = searchQuery.trim();
-    // 導向首頁並帶上 ?q=... 的查詢參數
-    navigate(`/?q=${encodeURIComponent(trimmed)}`); //navigate() 不會真的重新載入頁面
+    const trimmedQuery = searchQuery.trim();
+    // 複製現有 URL 參數（保留 sort 等其他參數）
+    const params = new URLSearchParams(searchParams);
+    if (trimmedQuery) {
+      params.set("q", trimmedQuery);
+    } else {
+      params.delete("q"); // 搜尋字串為空時，移除 q 參數
+    }
+    navigate(`/?${params.toString()}`); //navigate() 不會真的重新載入頁面
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
