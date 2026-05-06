@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useCartStore } from "../store/useCartStore";
 import { useAuthStore } from "../store/useAuthStore";
 import { ThemeSwitch } from "./ThemeSwitch";
@@ -12,6 +13,22 @@ export function Header() {
   // for (const item of cart) {
   //   totalQuantity += item.quantity;
   // }
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    const trimmed = searchQuery.trim();
+    // 導向首頁並帶上 ?q=... 的查詢參數
+    navigate(`/?q=${encodeURIComponent(trimmed)}`); //navigate() 不會真的重新載入頁面
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="header">
       <div className="left-section">
@@ -24,9 +41,16 @@ export function Header() {
       </div>
 
       <div className="middle-section">
-        <input className="search-bar" type="text" placeholder="Search" />
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Search"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
+        />
 
-        <button className="search-button">
+        <button className="search-button" onClick={handleSearch}>
           <img className="search-icon" src="/images/icons/search-icon.png" />
         </button>
       </div>

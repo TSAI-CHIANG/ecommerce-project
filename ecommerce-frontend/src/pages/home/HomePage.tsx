@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { ProductType } from "../../types";
 import { Header } from "../../components/Header";
 import { ProductsGrid } from "./ProductsGrid";
@@ -11,6 +12,17 @@ export function HomePage() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+
+  // 讀取 URL 中 ?q=... 的搜尋關鍵字，如果沒有就是空字串
+  const searchQuery = searchParams.get("q") ?? ""; //??左邊是 null 或 undefined 才用右邊；否則用左邊。
+
+  // 依據關鍵字過濾商品（對名稱做大小寫不敏感比對）
+  const filteredProducts = searchQuery
+    ? products.filter((p) =>
+        p.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : products;
 
   // 設定頁面標題
   useEffect(() => {
@@ -60,7 +72,18 @@ export function HomePage() {
       <Header />
 
       <div className="home-page">
-        <ProductsGrid products={products} loadCart={loadCart} />
+        {/* 如果有在搜尋，顯示搜尋結果提示 */}
+        {/* && 在 JSX 裡的意思是：左邊為真才渲染右邊 */}
+        {searchQuery && (
+          <p className="search-result-hint">
+            {
+              filteredProducts.length > 0
+                ? `Search "${searchQuery}"： ${filteredProducts.length} items found`
+                : `Search "${searchQuery}"： no match results`
+            }
+          </p>
+        )}
+        <ProductsGrid products={filteredProducts} loadCart={loadCart} />
       </div>
     </>
   );
