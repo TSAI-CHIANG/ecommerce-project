@@ -169,17 +169,20 @@
 
 .home-page .search-result-hint {
   margin: 0;
+  margin-right: auto;
+  /* 讓提示文字靠左，把篩選控件推到右邊 */
   font-size: 14px;
   color: var(--text-color, #666);
 }
 
 /* ── 篩選 + 排序工具列 ── */
-.home-page .filter-toolbar {
+.home-page .filter-sort-toolbar {
   border-bottom: 1px solid var(--border-color);
 }
 
 /* 每一橫行 */
-.home-page .toolbar-row {
+.home-page .toolbar-filter-row,
+.home-page .toolbar-sort-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -188,22 +191,25 @@
   gap: 8px;
 }
 
-/* 第二行（篩選條件那行）有上分隔線 */
+/* 第一行（篩選條件那行）有上分隔線，靠右對齊 */
 .home-page .toolbar-filter-row {
   border-top: 1px solid var(--border-color);
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 16px;
+}
+
+/* 第二行（排序那行）靠右對齊 */
+.home-page .toolbar-sort-row {
+  border-top: 1px solid var(--border-color);
+  justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .home-page .toolbar-left {
   display: flex;
   align-items: center;
-}
-
-.home-page .toolbar-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 /* 每一個篩選項目（label + input/select） */

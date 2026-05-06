@@ -39,18 +39,12 @@ export function HomePage() {
     navigate(`/?${params.toString()}`); //觸發 re-render
   };
 
-  // 切換[排序]
-  const handleSort = (value: string) => updateParam("sort", value);
-
-  // 切換[最低評分篩選]
-  const handleMinRating = (value: string) => updateParam("minRating", value);
-
   // 重設(reset)所有篩選（保留搜尋詞和排序）
   const handleResetFilters = () => {
     const params = new URLSearchParams(searchParams);
-    params.delete("minPrice");
-    params.delete("maxPrice");
-    params.delete("minRating");
+    params.delete("minPrice"); //若 minPrice 根本不存在 → 靜默忽略，不報錯
+    params.delete("maxPrice"); //若 maxPrice 根本不存在 → 靜默忽略，不報錯
+    params.delete("minRating"); //若 minRating 根本不存在 → 靜默忽略，不報錯
     navigate(`/?${params.toString()}`);
   };
 
@@ -67,12 +61,12 @@ export function HomePage() {
   // Step 2：依據價格和評分篩選
   const filteredProducts = keywordFiltered.filter((p) => {
     // 價格轉換：使用者輸入 dollars，商品資料是 cents
-    const minCents = minPriceDollars ? parseFloat(minPriceDollars) * 100 : null;
-    const maxCents = maxPriceDollars ? parseFloat(maxPriceDollars) * 100 : null;
+    const minPriceCents = minPriceDollars ? parseFloat(minPriceDollars) * 100 : null;
+    const maxPriceCents = maxPriceDollars ? parseFloat(maxPriceDollars) * 100 : null;
     const minStar  = minRating ? parseFloat(minRating) : null;
 
-    if (minCents !== null && p.priceCents < minCents) return false; //&& 的短路：兩個條件都要成立
-    if (maxCents !== null && p.priceCents > maxCents) return false;
+    if (minPriceCents !== null && p.priceCents < minPriceCents) return false; //&& 的短路：兩個條件都要成立
+    if (maxPriceCents !== null && p.priceCents > maxPriceCents) return false;
     if (minStar  !== null && p.rating.stars < minStar) return false;
     return true;
   });
@@ -135,39 +129,20 @@ export function HomePage() {
 
       <div className="home-page">
         {/* ── 工具列 ── */}
-        <div className="filter-toolbar">
+        <div className="filter-sort-toolbar">
 
-          {/* 第一行：搜尋結果提示 + 排序 */}
-          <div className="toolbar-row">
-            <div className="toolbar-left">
-              {/* && 在 JSX 裡的意思是：左邊為真才渲染右邊 */}
-              {searchQuery && (
-                <p className="search-result-hint">
-                  {keywordFiltered.length > 0
-                    ? `Search "${searchQuery}"： ${keywordFiltered.length} items found`
-                    : `Search "${searchQuery}"： no match results`}
-                </p>
-              )}
-            </div>
-            <div className="toolbar-right">
-              <label className="filter-label" htmlFor="sort-select">Sort by：</label>
-              <select
-                id="sort-select"
-                className="filter-select"
-                value={sortKey}
-                onChange={(e) => handleSort(e.target.value)}
-              >
-                <option value="">Default</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="rating-desc">Rating: High to Low</option>
-                <option value="rating-asc">Rating: Low to High</option>
-              </select>
-            </div>
-          </div>
+          {/* 第一行：搜尋結果提示 + 篩選條件 */}
+          <div className="toolbar-filter-row">
+            {/* 搜尋結果提示 */}
+            {searchQuery && (
+              <p className="search-result-hint">
+                {/* && 在 JSX 裡的意思是：左邊為真才渲染右邊 */}
+                {keywordFiltered.length > 0
+                  ? `Search "${searchQuery}"： ${keywordFiltered.length} items found`
+                  : `Search "${searchQuery}"： no match results`}
+              </p>
+            )}
 
-          {/* 第二行：篩選條件 */}
-          <div className="toolbar-row toolbar-filter-row">
             {/* 價格範圍 */}
             <div className="filter-group">
               <span className="filter-label">Price ($)：</span>
@@ -199,7 +174,7 @@ export function HomePage() {
                 id="min-rating"
                 className="filter-select"
                 value={minRating}
-                onChange={(e) => handleMinRating(e.target.value)}
+                onChange={(e) => updateParam("minRating", e.target.value)}
               >
                 <option value="">All</option>
                 <option value="4.5">4.5 ★ & up</option>
@@ -215,9 +190,26 @@ export function HomePage() {
                 ✕ Reset Filters
               </button>
             )}
-          </div>  {/* end toolbar-row toolbar-filter-row */}
+          </div>  {/* end toolbar-filter-row(第一行) */}
 
-        </div>  {/* end filter-toolbar */}
+          {/* 第二行：排序 */}
+          <div className="toolbar-sort-row">
+              <label className="filter-label" htmlFor="sort-select">Sort by：</label>
+              <select
+                id="sort-select"
+                className="filter-select"
+                value={sortKey}
+                onChange={(e) => updateParam("sort", e.target.value)}
+              >
+                <option value="">Default</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating-desc">Rating: High to Low</option>
+                <option value="rating-asc">Rating: Low to High</option>
+              </select>
+          </div>  {/* end 第二行 */}
+
+        </div>  {/* end filter-sort-toolbar */}
 
         <ProductsGrid products={sortedProducts} loadCart={loadCart} />
       </div>
