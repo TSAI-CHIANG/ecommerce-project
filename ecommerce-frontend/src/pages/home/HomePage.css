@@ -173,40 +173,89 @@
   color: var(--text-color, #666);
 }
 
-/* 排序工具列：左邊放搜尋提示，右邊放排序選單 */
-.home-page .sort-toolbar {
+/* ── 篩選 + 排序工具列 ── */
+.home-page .filter-toolbar {
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* 每一橫行 */
+.home-page .toolbar-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--border-color);
+  padding: 8px 20px;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.home-page .sort-left {
+/* 第二行（篩選條件那行）有上分隔線 */
+.home-page .toolbar-filter-row {
+  border-top: 1px solid var(--border-color);
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.home-page .toolbar-left {
   display: flex;
   align-items: center;
 }
 
-.home-page .sort-right {
+.home-page .toolbar-right {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.home-page .sort-label {
+/* 每一個篩選項目（label + input/select） */
+.home-page .filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.home-page .filter-label {
   font-size: 14px;
   color: var(--text-color, #555);
   white-space: nowrap;
 }
 
-.home-page .sort-select {
+.home-page .filter-select {
   font-size: 14px;
   padding: 4px 8px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
-  /* background-color: var(--background-color, #fff); */
   color: var(--text-color, #333);
   cursor: pointer;
+}
+
+/* 價格輸入框 */
+.home-page .filter-input {
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-color, #333);
+  width: 80px;
+}
+
+/* 價格範圍中間的 – 符號 */
+.home-page .filter-separator {
+  font-size: 14px;
+  color: var(--text-color, #999);
+}
+
+/* 重設篩選按鈕 */
+.home-page .reset-filter-button {
+  font-size: 13px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-color, #555);
+  background: transparent;
+  white-space: nowrap;
+}
+
+.home-page .reset-filter-button:hover {
+  background-color: var(--border-color);
 }
