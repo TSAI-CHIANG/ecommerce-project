@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from './index.js';
+import { sequelize } from './index.js'; // 引入你在 index.js 建立好的「資料庫連線」
 
 export const Order = sequelize.define('Order', {
   id: {
