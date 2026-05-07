@@ -11,7 +11,7 @@ import cartItemRoutes from './routes/cartItems.js';
 import orderRoutes from './routes/orders.js';
 import resetRoutes from './routes/reset.js';
 import paymentSummaryRoutes from './routes/paymentSummary.js';
-import chatAiRoutes from './routes/chatAi.js'; // 👈 新增：AI chat 路由
+import chatAiRoutes from './routes/chatAi.js'; // AI chat 路由
 import { Product } from './models/Product.js';
 import { DeliveryOption } from './models/DeliveryOption.js';
 import { CartItem } from './models/CartItem.js';
@@ -41,7 +41,7 @@ app.use('/api/cart-items', cartItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reset', resetRoutes);
 app.use('/api/payment-summary', paymentSummaryRoutes);
-app.use('/api', chatAiRoutes); // 👈 新增：會提供 POST /api/chat
+app.use('/api/chat', chatAiRoutes);
 
 // Serve static files from the dist folder
 app.use(express.static(path.join(__dirname, 'dist')));

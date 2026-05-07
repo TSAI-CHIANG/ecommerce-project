@@ -3,19 +3,7 @@ import express from 'express';
 import { generateChatReply } from '../backend/ai/chatService.js';
 
 const router = express.Router();
-
-/**
- * POST /api/chat
- * body:
- * {
- *   "message": "使用者輸入",
- *   "history": [
- *      { "role": "user" | "assistant", "content": "..." },
- *      ...
- *   ]
- * }
- */
-router.post('/chat', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     const { message, history } = req.body;
 
