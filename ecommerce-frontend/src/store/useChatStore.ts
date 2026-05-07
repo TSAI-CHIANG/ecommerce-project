@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { ChatMessageType } from "../components/chatbot/ChatbotWidget";
 
 type ChatStore = {
+    // 定義了這個 Store 裡面會有哪些資料 (狀態) 和哪些操作方法 (行為)
     chatMessages: ChatMessageType[];
     isSending: boolean;
     isChatWindowOpen: boolean;
@@ -14,6 +15,9 @@ type ChatStore = {
 };
 
 export const useChatStore = create<ChatStore>((set, get) => ({
+    // set：用來「修改」狀態
+    // get：用來「讀取」當前狀態
+
     // 狀態 (State)
     chatMessages: [
         {
@@ -32,13 +36,16 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     isTextboxTop: true,
 
     // 行為 (Actions)
+    // set 可以接收一個回呼函式 (Callback)，參數 state 代表「現在所有的狀態」。
     toggleChatWindow: () =>
         set((state) => {
             return { isChatWindowOpen: !state.isChatWindowOpen };
         }),
 
     toggleTextboxPosition: () =>
-        set((state) => ({ isTextboxTop: !state.isTextboxTop })),
+        set((state) => {
+            return { isTextboxTop: !state.isTextboxTop }
+        }),
 
     sendMessage: async (inputText: string) => {
         const { chatMessages, isSending } = get();
@@ -52,23 +59,22 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             sender: "user",
         };
 
-        const newChatMessages = [...chatMessages, userMessage];
-
-        set({
-            chatMessages: newChatMessages,
+        set((state) => ({
+            chatMessages: [...state.chatMessages, userMessage],
             isSending: true,
-        });
+        }));
 
         try {
             // 2. 打 API 詢問機器人
             const response = await axios.post("/api/chat", {
                 message: userMessage.text,
-                history: newChatMessages.map((msg) => ({
+                history: chatMessages.map((msg) => ({
                     role: msg.sender === "user" ? "user" : "assistant",
                     content: msg.text,
                 })),
             });
 
+            // 等待後端 (await) 結束後，把後端的回傳值 (response.data.reply) 拿出來
             const botMessage: ChatMessageType = {
                 id: uuidv4(),
                 text: response.data.reply || "抱歉，目前沒有取得回覆內容。",
@@ -94,4 +100,5 @@ export const useChatStore = create<ChatStore>((set, get) => ({
             set({ isSending: false });
         }
     },
+
 }));
