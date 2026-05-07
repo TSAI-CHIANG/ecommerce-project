@@ -4,7 +4,7 @@ import { Order } from '../../models/Order.js';
 /**
  * 從使用者訊息文字中抓出看起來像訂單編號的字串。
  * 目前 Order.id 是 UUID，所以這裡先用簡單規則抓「含英數 + dash，長度 >= 10」的片段。
- * 之後如果你有明確的訂單編號格式，可以再調整 regex。
+ * 之後如果有明確的訂單編號格式，可以再調整 regex。
  */
 export function extractOrderIdsFromMessage(message) {
   if (!message || typeof message !== 'string') return [];

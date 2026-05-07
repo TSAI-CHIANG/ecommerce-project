@@ -21,7 +21,6 @@ function ChatInput() {
     setInputText("");
 
     // 4. 觸發背後的商業邏輯/非同步更新 (Zustand)
-    // 這裡直接使用剛存好的 trimmedText，絕對安全且不受 React 重新渲染影響
     sendMessage(trimmedText);
   };
 
