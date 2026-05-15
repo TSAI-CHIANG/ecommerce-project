@@ -1,4 +1,4 @@
-.login-container {
+.register-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -7,8 +7,8 @@
   padding: 20px;
 }
 
-.login-box {
-  background-color: var(--card-bg-color, rgb(247, 216, 171));
+.register-box {
+  background-color: var(--card-bg-color, rgb(242, 207, 154));
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(85, 47, 5, 0.1);
@@ -16,7 +16,7 @@
   max-width: 400px;
 }
 
-.login-box h2 {
+.register-box h2 {
   text-align: center;
   margin-bottom: 24px;
   color: var(--text-color, #333);
@@ -48,7 +48,7 @@
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.login-button {
+.register-button {
   width: 100%;
   padding: 12px;
   background-color: #f6a100;
@@ -62,11 +62,11 @@
   margin-top: 8px;
 }
 
-.login-button:hover:not(:disabled) {
+.register-button:hover:not(:disabled) {
   background-color: #d18800;
 }
 
-.login-button.loading {
+.register-button.loading {
   background-color: #ccc;
   cursor: not-allowed;
 }
@@ -80,20 +80,11 @@
   font-size: 14px;
 }
 
-.login-footer {
+.register-footer {
   margin-top: 24px;
   text-align: center;
   font-size: 14px;
   color: #666;
-}
-
-.mock-link {
-  color: #007bff;
-  cursor: pointer;
-}
-
-.mock-link:hover {
-  text-decoration: underline;
 }
 
 .auth-link {

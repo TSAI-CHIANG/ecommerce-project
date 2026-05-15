@@ -1,53 +1,71 @@
 import { create } from 'zustand';
 import type { UserType } from '../types';
+import axios from 'axios';
+
 
 type AuthState = {
     user: UserType | null;
     isAuthenticated: boolean;
     login: (email: string, password: string) => Promise<boolean>;
+    register: (name: string, email: string, password: string) => Promise<boolean>;
     logout: () => void;
 };
 
-// 這是 Mock 的使用者資料庫
-const MOCK_USERS: Record<string, UserType & { password: string }> = {
-    'admin@example.com': {
-        id: 'u1',
-        name: 'Admin User',
-        email: 'admin@example.com',
-        password: 'password123',
-    },
-    'test@example.com': {
-        id: 'u2',
-        name: 'Test Member',
-        email: 'test@example.com',
-        password: '123',
-    },
+
+// 初始化時，試著從 localStorage 讀取 user 資料
+const getLocalStoredUser = (): UserType | null => {
+    try {
+        return JSON.parse(localStorage.getItem('ecommerce-user') || 'null')
+    } catch {
+        return null
+    }
 };
 
+const storedUser = getLocalStoredUser();
+
 export const useAuthStore = create<AuthState>((set) => ({
-    // 初始化時，試著從 localStorage 讀取 user 資料
-    user: JSON.parse(localStorage.getItem('ecommerce-user') || 'null'),
-    isAuthenticated: !!localStorage.getItem('ecommerce-user'),
+    user: storedUser,
+    isAuthenticated: storedUser !== null,
 
     login: async (email, password) => {
-        // 模擬 API 延遲
-        await new Promise((resolve) => setTimeout(resolve, 800));
-
-        const foundUser = MOCK_USERS[email];
-        if (foundUser && foundUser.password === password) {
-            const userData: UserType = {
-                id: foundUser.id,
-                name: foundUser.name,
-                email: foundUser.email,
-            };
-
-            // 儲存到 state 並持久化到 localStorage
+        try {
+            const response = await axios.post<UserType>(
+                '/api/auth/login',
+                { email, password }
+            );
+            const userData: UserType = response.data;
             set({ user: userData, isAuthenticated: true });
             localStorage.setItem('ecommerce-user', JSON.stringify(userData));
             return true;
-        }
 
-        return false;
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 401) {
+                //401 = Unauthorized，代表帳號或密碼錯誤
+                //回傳 false，讓 LoginPage 顯示對應的錯誤訊息提示
+                //?為選擇性屬性呼叫，完全斷線時 error.response 是 undefined，所以要加?
+                return false;
+            }
+            //不是 axios 錯誤，或 status 不是 401（例如 500 伺服器錯誤），就 throw error 往上拋
+            throw error;
+        }
+    },
+
+    register: async (name, email, password) => {
+        try {
+            const response = await axios.post<UserType>(
+                '/api/auth/register',
+                { name, email, password }
+            );
+            const userData: UserType = response.data;
+            set({ user: userData, isAuthenticated: true });
+            localStorage.setItem('ecommerce-user', JSON.stringify(userData));
+            return true;
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 409) {
+                return false;
+            }
+            throw error;
+        }
     },
 
     logout: () => {

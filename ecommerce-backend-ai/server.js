@@ -12,14 +12,18 @@ import orderRoutes from './routes/orders.js';
 import resetRoutes from './routes/reset.js';
 import paymentSummaryRoutes from './routes/paymentSummary.js';
 import chatAiRoutes from './routes/chatAi.js'; // AI chat 路由
+import authRoutes from './routes/auth.js';
 import { Product } from './models/Product.js';
 import { DeliveryOption } from './models/DeliveryOption.js';
 import { CartItem } from './models/CartItem.js';
 import { Order } from './models/Order.js';
+import { User } from './models/User.js';
+import bcrypt from 'bcryptjs';
 import { defaultProducts } from './defaultData/defaultProducts.js';
 import { defaultDeliveryOptions } from './defaultData/defaultDeliveryOptions.js';
 import { defaultCart } from './defaultData/defaultCart.js';
 import { defaultOrders } from './defaultData/defaultOrders.js';
+import { defaultUsers } from './defaultData/defaultUsers.js';
 import fs from 'fs';
 
 const app = express();
@@ -42,6 +46,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/reset', resetRoutes);
 app.use('/api/payment-summary', paymentSummaryRoutes);
 app.use('/api/chat', chatAiRoutes);
+app.use('/api/auth', authRoutes);
 
 // Serve static files from the dist folder
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -101,6 +106,18 @@ if (productCount === 0) {
   await Order.bulkCreate(ordersWithTimestamps);
 
   console.log('Default data added to the database.');
+}
+
+// 初始化預設使用者（若 Users 資料表為空）
+const userCount = await User.count();
+if (userCount === 0) {
+  for (const u of defaultUsers) {
+    // bcrypt.hash(明文密碼, saltRounds)：saltRounds 越高越安全，但也越慢；10 是業界常用值
+    const hashedPassword = await bcrypt.hash(u.password, 10);
+    await User.create({ name: u.name, email: u.email, password: hashedPassword });
+  }
+
+  console.log('Default users added to the database.');
 }
 
 // Start server

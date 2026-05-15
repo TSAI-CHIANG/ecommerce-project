@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import './LoginPage.css';
 
@@ -17,16 +17,23 @@ export function LoginPage() {
     setIsLoading(true);
     setErrorPrompt('');
 
-    const success = await login(email, password);
-
-    setIsLoading(false);
-
-    if (success) {
-      // 登入成功後跳到首頁
-      navigate('/');
-    } else {
-      setErrorPrompt('Invalid email or password. Hint: try admin@example.com / password123');
+    try{
+      const success = await login(email, password);
+      if (success) {
+        // 登入成功後跳到首頁
+        navigate('/');
+      } else {
+        setErrorPrompt('Invalid email or password.');
+        // 帳號或密碼錯誤時把 password 欄位清空
+        setPassword('');
+      }
+    } catch(error) { //打真正API 時，網路斷線等情況就能被正確捕捉
+      console.error('Login error:', error); 
+      setErrorPrompt("An unexpected error occurred during login.");
+    } finally {
+      setIsLoading(false);
     }
+
   };
 
   return (
@@ -45,7 +52,8 @@ export function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="admin@example.com"
+              placeholder="Enter your email"
+              disabled={isLoading}
             />
           </div>
           
@@ -57,7 +65,8 @@ export function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="password123"
+              placeholder="Enter your password"
+              disabled={isLoading}
             />
           </div>
           
@@ -71,7 +80,7 @@ export function LoginPage() {
         </form>
         
         <div className="login-footer">
-          <p>Don't have an account? <span className="mock-link">Sign up (Coming Soon)</span></p>
+          <p>Don't have an account? <Link to="/register" className="auth-link">Sign up</Link></p>
         </div>
       </div>
     </div>
