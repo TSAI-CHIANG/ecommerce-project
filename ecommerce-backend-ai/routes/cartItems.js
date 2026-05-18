@@ -5,9 +5,10 @@ import { DeliveryOption } from '../models/DeliveryOption.js';
 
 const router = express.Router();
 
+// GET /api/cart-items（只回傳當前使用者的購物車）
 router.get('/', async (req, res) => {
   const expand = req.query.expand;
-  let cartItems = await CartItem.findAll();
+  let cartItems = await CartItem.findAll({ where: { userId: req.userId } });
 
   if (expand === 'product') {
     cartItems = await Promise.all(cartItems.map(async (item) => {
@@ -22,6 +23,7 @@ router.get('/', async (req, res) => {
   res.json(cartItems);
 });
 
+// POST /api/cart-items（加入購物車，關聯當前使用者）
 router.post('/', async (req, res) => {
   const { productId, quantity } = req.body;
 
@@ -34,22 +36,24 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Quantity must be a number between 1 and 10' });
   }
 
-  let cartItem = await CartItem.findOne({ where: { productId } });
+  // 只在當前使用者的購物車裡尋找
+  let cartItem = await CartItem.findOne({ where: { productId, userId: req.userId } });
   if (cartItem) {
     cartItem.quantity += quantity;
     await cartItem.save();
   } else {
-    cartItem = await CartItem.create({ productId, quantity, deliveryOptionId: "1" });
+    cartItem = await CartItem.create({ productId, quantity, deliveryOptionId: '1', userId: req.userId });
   }
 
   res.status(201).json(cartItem);
 });
 
+// PUT /api/cart-items/:productId（更新當前使用者的購物車項目）
 router.put('/:productId', async (req, res) => {
   const { productId } = req.params;
   const { quantity, deliveryOptionId } = req.body;
 
-  const cartItem = await CartItem.findOne({ where: { productId } });
+  const cartItem = await CartItem.findOne({ where: { productId, userId: req.userId } });
   if (!cartItem) {
     return res.status(404).json({ error: 'Cart item not found' });
   }
@@ -73,10 +77,11 @@ router.put('/:productId', async (req, res) => {
   res.json(cartItem);
 });
 
+// DELETE /api/cart-items/:productId（刪除當前使用者的購物車項目）
 router.delete('/:productId', async (req, res) => {
   const { productId } = req.params;
 
-  const cartItem = await CartItem.findOne({ where: { productId } });
+  const cartItem = await CartItem.findOne({ where: { productId, userId: req.userId } });
   if (!cartItem) {
     return res.status(404).json({ error: 'Cart item not found' });
   }

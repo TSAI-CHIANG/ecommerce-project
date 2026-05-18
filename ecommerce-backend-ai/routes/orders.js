@@ -6,9 +6,13 @@ import { CartItem } from '../models/CartItem.js';
 
 const router = express.Router();
 
+// GET /api/orders（只回傳當前使用者的訂單）
 router.get('/', async (req, res) => {
   const expand = req.query.expand;
-  let orders = await Order.unscoped().findAll({ order: [['orderTimeMs', 'DESC']] }); // Sort by most recent
+  let orders = await Order.unscoped().findAll({
+    where: { userId: req.userId },
+    order: [['orderTimeMs', 'DESC']]
+  });
 
   if (expand === 'products') {
     orders = await Promise.all(orders.map(async (order) => {
@@ -29,8 +33,10 @@ router.get('/', async (req, res) => {
   res.json(orders);
 });
 
+// POST /api/orders（從當前使用者的購物車建立訂單）
 router.post('/', async (req, res) => {
-  const cartItems = await CartItem.findAll();
+  // 只取當前使用者的購物車
+  const cartItems = await CartItem.findAll({ where: { userId: req.userId } });
 
   if (cartItems.length === 0) {
     return res.status(400).json({ error: 'Cart is empty' });
@@ -59,17 +65,21 @@ router.post('/', async (req, res) => {
 
   totalCostCents = Math.round(totalCostCents * 1.1);
 
+  // 建立訂單時關聯當前使用者
   const order = await Order.create({
     orderTimeMs: Date.now(),
     totalCostCents,
-    products
+    products,
+    userId: req.userId,
   });
 
-  await CartItem.destroy({ where: {} });
+  // 只清空當前使用者的購物車
+  await CartItem.destroy({ where: { userId: req.userId } });
 
   res.status(201).json(order);
 });
 
+// GET /api/orders/:orderId（取得單筆訂單，並確認屬於當前使用者）
 router.get('/:orderId', async (req, res) => {
   const { orderId } = req.params;
   const expand = req.query.expand;
@@ -77,6 +87,11 @@ router.get('/:orderId', async (req, res) => {
   let order = await Order.findByPk(orderId);
   if (!order) {
     return res.status(404).json({ error: 'Order not found' });
+  }
+
+  // 確認訂單屬於當前使用者
+  if (order.userId !== req.userId) {
+    return res.status(403).json({ error: 'Access denied.' });
   }
 
   if (expand === 'products') {

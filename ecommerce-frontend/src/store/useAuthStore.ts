@@ -3,7 +3,6 @@ import type { UserType } from '../types';
 import axios from 'axios';
 import { useCartStore } from './useCartStore';
 
-
 type AuthState = {
     user: UserType | null;
     isAuthenticated: boolean;
@@ -11,7 +10,6 @@ type AuthState = {
     register: (name: string, email: string, password: string) => Promise<boolean>;
     logout: () => void;
 };
-
 
 // 初始化時，試著從 localStorage 讀取 user 資料
 const getLocalStoredUser = (): UserType | null => {
@@ -30,13 +28,16 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     login: async (email, password) => {
         try {
-            const response = await axios.post<UserType>(
+            // 後端現在回傳 { user, token }
+            const response = await axios.post<{ user: UserType; token: string }>(
                 '/api/auth/login',
                 { email, password }
             );
-            const userData: UserType = response.data;
+            const { user: userData, token } = response.data; //user: userData 改名
+
             set({ user: userData, isAuthenticated: true });
             localStorage.setItem('ecommerce-user', JSON.stringify(userData));
+            localStorage.setItem('ecommerce-token', token); // 儲存 JWT token
             return true;
 
         } catch (error) {
@@ -53,13 +54,16 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     register: async (name, email, password) => {
         try {
-            const response = await axios.post<UserType>(
+            // 後端現在回傳 { user, token }
+            const response = await axios.post<{ user: UserType; token: string }>(
                 '/api/auth/register',
                 { name, email, password }
             );
-            const userData: UserType = response.data;
+            const { user: userData, token } = response.data;
+
             set({ user: userData, isAuthenticated: true });
             localStorage.setItem('ecommerce-user', JSON.stringify(userData));
+            localStorage.setItem('ecommerce-token', token); // 儲存 JWT token
             return true;
         } catch (error) {
             if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -72,8 +76,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     logout: () => {
         set({ user: null, isAuthenticated: false });
         localStorage.removeItem('ecommerce-user');
-        // 登出時同步清空購物車，避免下一個使用者看到舊資料
+        localStorage.removeItem('ecommerce-token'); // 清除 JWT token
+
+        // 登出時同步清空購物車，避免下一個使用者看到舊資料 //getState() 是 Zustand 提供的 API
         useCartStore.getState().clearCart();
-        //getState() 是 Zustand 提供的 API
     },
 }));

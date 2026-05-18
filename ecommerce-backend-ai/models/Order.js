@@ -7,6 +7,10 @@ export const Order = sequelize.define('Order', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true
   },
+  userId: {
+    type: DataTypes.UUID,
+    allowNull: true, // nullable：相容舊有資料
+  },
   orderTimeMs: {
     type: DataTypes.BIGINT,
     allowNull: false

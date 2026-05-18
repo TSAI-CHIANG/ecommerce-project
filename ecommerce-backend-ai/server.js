@@ -13,6 +13,7 @@ import resetRoutes from './routes/reset.js';
 import paymentSummaryRoutes from './routes/paymentSummary.js';
 import chatAiRoutes from './routes/chatAi.js'; // AI chat 路由
 import authRoutes from './routes/auth.js';
+import { authMiddleware } from './middleware/auth.js';
 import { Product } from './models/Product.js';
 import { DeliveryOption } from './models/DeliveryOption.js';
 import { CartItem } from './models/CartItem.js';
@@ -41,10 +42,10 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // Use routes
 app.use('/api/products', productRoutes);
 app.use('/api/delivery-options', deliveryOptionRoutes);
-app.use('/api/cart-items', cartItemRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/reset', resetRoutes);
-app.use('/api/payment-summary', paymentSummaryRoutes);
+app.use('/api/cart-items', authMiddleware, cartItemRoutes);
+app.use('/api/orders', authMiddleware, orderRoutes);
+app.use('/api/reset', authMiddleware, resetRoutes);
+app.use('/api/payment-summary', authMiddleware, paymentSummaryRoutes);
 app.use('/api/chat', chatAiRoutes);
 app.use('/api/auth', authRoutes);
 
