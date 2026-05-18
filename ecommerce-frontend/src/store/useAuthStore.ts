@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { UserType } from '../types';
 import axios from 'axios';
+import { useCartStore } from './useCartStore';
 
 
 type AuthState = {
@@ -71,5 +72,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     logout: () => {
         set({ user: null, isAuthenticated: false });
         localStorage.removeItem('ecommerce-user');
+        // 登出時同步清空購物車，避免下一個使用者看到舊資料
+        useCartStore.getState().clearCart();
+        //getState() 是 Zustand 提供的 API
     },
 }));

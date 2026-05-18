@@ -4,15 +4,26 @@ import type { CartItemType } from "../types";
 
 type CartStore = {
     cart: CartItemType[];
+    isLoading: boolean;
     loadCart: () => Promise<void>;
+    clearCart: () => void;
 };
 
 export const useCartStore = create<CartStore>((set) => ({
-    cart: [], // 一開始購物車是空的
+    cart: [],
+    isLoading: false,
     loadCart: async () => {
-        const { data } = await axios.get<CartItemType[]>(
-            "/api/cart-items?expand=product"
-        );
-        set({ cart: data });  // ← 用 set 把資料存進 store
+        set({ isLoading: true });
+        try {
+            const { data } = await axios.get<CartItemType[]>(
+                "/api/cart-items?expand=product"
+            );
+            set({ cart: data });
+        } catch (error) {
+            console.error('Failed to load cart:', error);
+        } finally {
+            set({ isLoading: false });
+        }
     },
+    clearCart: () => set({ cart: [] })
 }));
