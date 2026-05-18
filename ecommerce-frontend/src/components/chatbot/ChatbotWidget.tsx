@@ -22,6 +22,7 @@ export function ChatbotWidget() {
       <button
         className="chatbot-open-button"
         onClick={toggleChatWindow}
+        data-testid="open-chatbot-button"
       >
         💬
       </button>
@@ -35,6 +36,7 @@ export function ChatbotWidget() {
         <button
           className="chatbot-close-button"
           onClick={toggleChatWindow}
+          data-testid="close-chatbot-button"
         >
           ✕
         </button>
